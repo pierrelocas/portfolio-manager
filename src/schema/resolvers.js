@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const SECRET = "22wh@lescanfly22feetsunderground"
 
 const { users, portfolios, transactions } = require('./db')
 
@@ -18,7 +19,9 @@ const resolvers = {
       const user = await users.find((u) => (u.email === email))
       const match = await bcrypt.compare(password, user.password)
       if (!match) throw "Password didn't match"
-      return user
+      delete user.password
+      const token = await jwt.sign({...user}, SECRET)
+      return { token }
     },
     // TODO: should return a token
     register: async (_, { user }) => {
@@ -27,7 +30,8 @@ const resolvers = {
       const newUser = await { id, ...user, password }
       users.push(newUser)
       delete newUser.password
-      return newUser
+      const token = await jwt.sign({...newUser}, SECRET)
+      return { token }
     },
     removeUser: (_, { id })=>users[0],
     modifyUser: (_, { id, user })=> user[0],

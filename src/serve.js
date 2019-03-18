@@ -6,6 +6,8 @@ const { typeDefs, resolvers } = require('./schema')
 // In the most basic sense, the ApolloServer can be started
 // by passing type definitions (typeDefs) and the resolvers
 // responsible for fetching the data for those types.
+
+// TODO: Add user info to the context
 mongoose.connect("mongodb+srv://admin:test@portfolio-cluster-i1nqe.mongodb.net/portfolio-db?retryWrites=true", { useNewUrlParser: true})
   .then(()=> new ApolloServer({ typeDefs, resolvers }).listen()
   .then(({ url }) => {

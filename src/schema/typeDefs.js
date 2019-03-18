@@ -30,6 +30,10 @@ const typeDefs = gql`
     commission: Float
   }
 
+  type Token {
+    token: String!
+  }
+
   type Query {
     users: [User]
     user(id: ID!): User
@@ -42,10 +46,10 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    signIn(email: String!, password: String!): User!
-    register(user: UserInput): User
-    removeUser( id: ID! ): Boolean
-    modifyUser( id: ID!, user: UserInput!): Boolean
+    signIn(email: String!, password: String!): Token!
+    register(user: UserInput): Token!
+    removeUser( id: ID! ): Boolean!
+    modifyUser( id: ID!, user: UserInput!): Boolean!
 
     addPortfolio(user_id: ID!, name: String!): Portfolio!
     removePortfolio(id: ID!): [Portfolio]!
