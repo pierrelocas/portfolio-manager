@@ -1,0 +1,28 @@
+{
+  "name": "stock-manager",
+  "version": "1.0.0",
+  "description": "Manage Stocks in Portfolio for Canadian tax",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "keywords": [
+    "stock",
+    "stocks",
+    "market",
+    "portfolio",
+    "portfolios"
+  ],
+  "author": "Pierre Locas",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.4.8",
+    "bcrypt": "^3.0.4",
+    "graphql": "^14.1.1",
+    "jsonwebtoken": "^8.5.0",
+    "mongoose": "^5.4.19"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
