@@ -11,7 +11,7 @@ const { users, portfolios, transactions } = require('./db')
 const resolvers = {
   Query: {
     users: () => User.find(),
-    user: async (_, { id }) => await User.findById(id),
+    user: async (_, { id }, context) => console.log(context.user) || await User.findById(id),
     portfolios: (_, { user_id }) => portfolios.filter((p)=>p.user_id === user_id),
     portfolio:(_, { id }) => portfolios.find((p)=>p.id === id),
     transactions: (_, { portfolio_id }) => transactions.filter((t)=>t.portfolio_id === portfolio_id),
