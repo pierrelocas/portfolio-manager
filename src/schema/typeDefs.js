@@ -7,27 +7,35 @@ const typeDefs = gql`
   #   message: String!
   # }
 
+  # TODO: Add language
   type User {
-    id: ID!
+    _id: ID!
     firstname: String!
     lastname: String!
     email: String!
+    createdAt: String
+    updatedAt: String
   }
 
+  # TODO: Add devise 
   type Portfolio {
-    id: ID!
+    _id: ID!
     user_id: ID!
     name: String!
+    createdAt: String
+    updatedAt: String
   }
 
   type Transaction {
-    id: ID!
+    _id: ID!
     portfolio_id: ID!
     date: String!
     stock: String!
     quantity: Int!
     price: Float!
     commission: Float
+    createdAt: String
+    updatedAt: String
   }
 
   type Token {
@@ -51,20 +59,19 @@ const typeDefs = gql`
     removeUser( id: ID! ): Boolean!
     modifyUser( id: ID!, user: UserInput!): Boolean!
 
-    addPortfolio(user_id: ID!, name: String!): Portfolio!
-    removePortfolio(id: ID!): [Portfolio]!
-    modifyPortfolio(portfolio: PortfolioInput): [Portfolio]!
+    addPortfolio(portfolio: PortfolioInput): Portfolio!
+    removePortfolio(id: ID!): Boolean!
+    modifyPortfolio(id: ID!, portfolio: PortfolioInput): Portfolio!
   
-    addTransaction(transaction: TransactionInput!): [Transaction]!
-    removeTransaction(id: ID!): [Transaction]!
-    modifyTransaction(id: ID!, transaction: TransactionInput!): [Transaction]!
+    addTransaction(transaction: TransactionInput!): Transaction!
+    removeTransaction(id: ID!): Boolean!
+    modifyTransaction(id: ID!, transaction: TransactionInput!): Transaction!
   
   }
 
   # Does it worth it to have a specific input?
   # Might be best to ommit the id in these cases, to be more reusable?
   input PortfolioInput{
-    id: ID!
     user_id: ID!
     name: String! 
   }
@@ -84,6 +91,7 @@ const typeDefs = gql`
     email: String! 
     password: String!
   }
+
   
 `;
 
