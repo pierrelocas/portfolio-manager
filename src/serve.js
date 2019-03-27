@@ -2,9 +2,12 @@ const { ApolloServer } = require('apollo-server')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 
-const { typeDefs, resolvers } = require('./schema')
+const typeDefs = require('./typeDefs')
+const resolvers = require('./resolvers')
+//const { typeDefs, resolvers } = require('./schema')
 
 // TODO: Add NODE_ENV variable
+// TODO: In prod might be better to cat env variable in package's scripts
 const { parsed : ENV_CONFIG } = require('dotenv').config()
 const { HOST, PORT, DB_HOST, DB_USER, DB_PASS, DB_NAME } = ENV_CONFIG
 

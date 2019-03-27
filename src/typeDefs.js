@@ -17,7 +17,7 @@ const typeDefs = gql`
     updatedAt: String
   }
 
-  # TODO: Add devise 
+  # TODO: Add devise, exchange
   type Portfolio {
     _id: ID!
     user_id: ID!
@@ -69,10 +69,16 @@ const typeDefs = gql`
   
   }
 
+  input UserInput{
+    firstname: String! 
+    lastname: String! 
+    email: String! 
+    password: String!
+  }
   # Does it worth it to have a specific input?
   # Might be best to ommit the id in these cases, to be more reusable?
   input PortfolioInput{
-    user_id: ID!
+    # user_id: ID!  current user extracted from context
     name: String! 
   }
 
@@ -85,12 +91,7 @@ const typeDefs = gql`
     commission: Float!
   }
 
-  input UserInput{
-    firstname: String! 
-    lastname: String! 
-    email: String! 
-    password: String!
-  }
+  
 
   
 `;

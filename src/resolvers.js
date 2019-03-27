@@ -1,12 +1,16 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-// SECRET in env variable
-const { SECRET } = require('../config') 
-const User = require('../models/user')
-const Portfolio = require('../models/portfolio')
-const Transaction = require('../models/transaction')
+const Joi = require('joi')
 
-const { users, portfolios, transactions } = require('./db')
+// SECRET in ENV variable?
+const { SECRET } = require('./config') 
+const User = require('./models/user')
+const Portfolio = require('./models/portfolio')
+const Transaction = require('./models/transaction')
+const { SignIn, Register, AddPortfolio, AddTransaction} = require('./schemas')
+
+
+// const { users, portfolios, transactions } = require('./db')
 
 const resolvers = {
   Query: {
@@ -17,9 +21,10 @@ const resolvers = {
     transactions: (_, { portfolio_id }) => transactions.filter((t)=>t.portfolio_id === portfolio_id),
     transaction: (_, { id }) => transactions.find((t)=> t.id === id )
   },
+  // Joi Schema has methods to include or exclude keys to validate (with, without, skip)
   Mutation: {
-    // TODO: should return a token
     signIn: async (_, { email, password }) => {
+      await Joi.validate({ email, password }, SignIn )
       const user = await User.findOne({email})
       const match = await bcrypt.compare(password, user.password)
       if (!match) throw "Password didn't match"
@@ -27,27 +32,25 @@ const resolvers = {
       const token = await jwt.sign({...user}, SECRET)
       return { token }
     },
-    // TODO: should return a token
     // TODO: should validate if email exist or handle errors appropriately
     register: async (_, { user }) => {
-      // const id = Math.max(...users.map((u)=> u.id)) + 1
-      try{
+        await Joi.validate(user, Register, { abortEarly: false })
         const password = await bcrypt.hash(user.password, 12)
         const newUser = await new User({...user, password})
         const result = await newUser.save() //return the user
         delete newUser.password
         const token = await jwt.sign({...newUser}, SECRET)
         return { token }
-      }catch(e){
-        console.log(e.code)
-      }
     },
     removeUser: (_, { id })=>users[0],
     modifyUser: (_, { id, user })=> user[0],
 
     // CRUD for Portfolio
-    addPortfolio: async (_, { portfolio }) => {
-      const newPortfolio = await new Portfolio({ ...portfolio })
+    addPortfolio: async (_, { portfolio },{ user }) => {
+      if(!user) throw "User must be logged in!"
+      const user_id = user._id
+      await Joi.validate({...portfolio}, AddPortfolio)
+      const newPortfolio = await new Portfolio({ user_id, ...portfolio })
       const result = await newPortfolio.save()
       return result
     },
@@ -71,12 +74,10 @@ const resolvers = {
     },
 
     // CRUD for Transaction
-    addTransaction: (_, { transaction }) => {
-      // const id = Math.max(...transactions.map((t)=> t.id))+1
-      // console.log(new Date(transaction.date))
-      // const newTransaction = new Transaction({ ...transaction, date: new Date(transaction.date) })
+    addTransaction: async (_, { transaction }) => {
+      const joiResult = await Joi.validate({ ...transaction, AddTransaction})
+      console.log(joiResult)
       const newTransaction = new Transaction({ ...transaction })
-      // transactions.push(newTransaction)
       const result = newTransaction.save()
       return result
     },

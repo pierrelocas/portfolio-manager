@@ -13,7 +13,10 @@ const userShema = new Schema({
   email: {
     type: String, 
     required: true,
-    unique: true
+    validate: {
+      validator: async email => await User.where({ email }).countDocuments() === 0, 
+      message: ({ value }) => `Email ${value} has already been taken.`  // TODO: Security
+    }
   },
   password: {
     type: String, 
@@ -23,4 +26,6 @@ const userShema = new Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('User', userShema)
+const User = mongoose.model('User', userShema)
+
+module.exports = User
