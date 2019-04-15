@@ -21,6 +21,10 @@ const userShema = new Schema({
   password: {
     type: String, 
     required: true
+  },
+  language: {
+    type: String,
+    required: true
   }
 }, {
   timestamps: true

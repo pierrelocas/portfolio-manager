@@ -1,10 +1,10 @@
 const Joi = require('joi');
 
-const Register =  Joi.object().keys({
+const SignUp =  Joi.object().keys({
   firstname: Joi.string().required().label('Firstname'),
   lastname: Joi.string().required().label('Lastname'),
   email: Joi.string().email({ minDomainAtoms: 2 }).required().label('Email'),
-  password: Joi.string().regex(/^(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])\S{8,30}$/).label('Password').options({
+  password: Joi.string().min(8).max(30).regex(/(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])/).label('Password').options({
     language: {
       string : {
         regex : {
@@ -12,13 +12,14 @@ const Register =  Joi.object().keys({
         }
       }
     }
-  })
+  }),
+  language: Joi.string().required().label("Language")
 })
 
 // Does SignIn require a pattern for SignIn since already compared to stored data
 const SignIn = Joi.object().keys({
   email: Joi.string().email({ minDomainAtoms: 2 }).required().label('Email'),
-  password: Joi.string().regex(/^(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])\S{8,30}$/).label('Password').options({
+  password: Joi.string().min(8).max(30).regex(/(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])/).label('Password').options({
     language: {
       string : {
         regex : {
@@ -30,4 +31,4 @@ const SignIn = Joi.object().keys({
 })
 
 
-module.exports = {Register, SignIn}
+module.exports = {SignUp, SignIn}

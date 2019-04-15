@@ -4,10 +4,11 @@ const Joi = require('joi')
 
 // SECRET in ENV variable?
 const { SECRET } = require('./config') 
-const User = require('./models/user')
-const Portfolio = require('./models/portfolio')
-const Transaction = require('./models/transaction')
-const { SignIn, Register, AddPortfolio, AddTransaction} = require('./schemas')
+// const User = require('./models/user')
+// const Portfolio = require('./models/portfolio')
+// const Transaction = require('./models/transaction')
+const { User, Portfolio, Transaction } = require('./models')
+const { SignIn, signUp, AddPortfolio, AddTransaction} = require('./schemas')
 
 
 // const { users, portfolios, transactions } = require('./db')
