@@ -9,7 +9,7 @@ require('dotenv').config() // dotenv package should be install on dev dependenci
 
 const { HOST, PORT, DB_HOST, DB_USER, DB_PASS, DB_NAME, SECRET } = process.env
 
-// TODO : try/catch here ? for validating token
+// TODO : try/catch here ? for validating token   tes
 // const getUser = token => token ? (jwt.verify(token, SECRET))._doc: null
 // const getUser = async token =>{
   // try {
