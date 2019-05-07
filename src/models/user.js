@@ -18,6 +18,10 @@ const userShema = new Schema({
       message: ({ value }) => `Email ${value} has already been taken.`  // TODO: Security
     }
   },
+  confirmed: {
+    type: Boolean,
+    default: false
+  },
   password: {
     type: String, 
     required: true

@@ -2,6 +2,7 @@
   "name": "porfolio-manager",
   "version": "1.0.0",
   "description": "Manage Stocks in Portfolio for Canadian tax",
+  "repository": "https://github.com/pierrelocas/portfolio-manager",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon"
@@ -22,7 +23,8 @@
     "graphql": "^14.1.1",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.0",
-    "mongoose": "^5.4.19"
+    "mongoose": "^5.4.19",
+    "nodemailer": "^6.1.1"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"

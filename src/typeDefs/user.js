@@ -13,6 +13,7 @@ module.exports = gql`
     firstname: String!
     lastname: String!
     email: String!
+    confirmed: Boolean
     language: Language!
     createdAt: String!
     updatedAt: String!
@@ -31,15 +32,17 @@ module.exports = gql`
     signIn(email: String!, password: String!): Token!
     signUp(user: UserInput): Token!
     # signOut: Boolean!
-    updateUser(id: ID!, user: UserInput!): Boolean!
+    updateUser(id: ID!, update: UserInput!): Boolean!
     deleteUser(id: ID!): Boolean!
+    confirmEmail(token: String!): Boolean!
   }
 
   input UserInput{
-    firstname: String! 
-    lastname: String! 
-    email: String! 
-    password: String!
-    language: Language!
+    firstname: String 
+    lastname: String
+    email: String
+    confirmed: Boolean
+    password: String
+    language: Language
   }
 `
