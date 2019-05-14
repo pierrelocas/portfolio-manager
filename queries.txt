@@ -49,3 +49,11 @@ mutation {
     updatedAt
   }
 }
+
+mutation {
+  resetPasswordRequest(email:"pierre.locas@gmail.com")
+}
+
+mutation {
+  resetPassword(token:"abc", password:"test")
+}

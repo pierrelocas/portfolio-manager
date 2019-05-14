@@ -2,34 +2,28 @@ const {
   UserInputError,
   AuthenticationError,
   ForbiddenError,
-  ApolloError
-} = require("apollo-server")
+  ApolloError,
+} = require('apollo-server')
 
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
-const Joi = require("joi")
-const nodemailer = require("nodemailer")
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const Joi = require('joi')
 
-require("dotenv").config()
+require('dotenv').config()
 
-const {
-  SECRET,
-  EMAIL_SECRET,
-  EMAIL_USER,
-  EMAIL_PASS,
-  EMAIL_SERVICE
-} = process.env
+const { SECRET, EMAIL_SECRET, RESET_SECRET } = process.env
 
-const { User } = require("../models")
-const { SignIn, SignUp, UpdateUser } = require("../schemas")
-const sendConfirmationEmail = require("../utils/mailer/emailConfirmation")
+const { User } = require('../models')
+const { SignIn, SignUp, UserGeneric } = require('../schemas')
+const sendConfirmationEmail = require('../utils/mailer/confirmation')
+const sendResetPasswordEmail = require('../utils/mailer/resetPassword')
 
 module.exports = {
   Query: {
     users: async (parent, args, { isSignedIn }, info) => {
-      if (!isSignedIn) throw new ForbiddenError("Must be a signed in admin.")
+      if (!isSignedIn) throw new ForbiddenError('Must be a signed in admin.')
       return await User.find().catch(err => {
-        throw new ApolloError(err, "MONGO_FIND_ERROR")
+        throw new ApolloError(err, 'MONGO_FIND_ERROR')
       })
     },
     // TODO: ADMIN ROLE only
@@ -37,15 +31,15 @@ module.exports = {
     me: async (parent, args, { userId }) =>
       await User.findById(userId).catch(err => {
         throw new AuthenticationError(
-          "Failed to retrieve user, must be signed in"
+          'Failed to retrieve user, must be signed in'
         )
-      })
+      }),
   },
   Mutation: {
     signIn: async (_, { email, password }, context, info) => {
       // Validate input
       await Joi.validate({ email, password }, SignIn, {
-        abortEarly: false
+        abortEarly: false,
       }).catch(err => {
         throw new UserInputError(`${err.name} : ${err.message}`)
       })
@@ -75,16 +69,16 @@ module.exports = {
 
       const { _id, firstname, lastname, email } = await await new User({
         ...user,
-        password
+        password,
       }).save()
 
       const token = await jwt.sign({ userId: _id }, SECRET, {
-        expiresIn: 3
+        expiresIn: 3,
       })
 
       // TODO: send confirmaton email async
       const emailToken = await jwt.sign({ userId: _id }, EMAIL_SECRET, {
-        expiresIn: "1d"
+        expiresIn: '1d',
       })
 
       // TODO: Handle errors when sending email
@@ -100,15 +94,15 @@ module.exports = {
     updateUser: async (_, { id, update }, { isSignedIn, userId }, info) => {
       // validate if user is signed in
       if (!isSignedIn)
-        throw new AuthenticationError("Must be signed in to update a user")
+        throw new AuthenticationError('Must be signed in to update a user')
 
       // validate if id provided belongs to the signedIn user
       if (id !== userId)
-        throw new ForbiddenError("Can only update your own account")
+        throw new ForbiddenError('Can only update your own account')
 
       // validate if fields to update (Joy)
       try {
-        await Joi.validate(update, UpdateUser)
+        await Joi.validate(update, UserGeneric)
       } catch (err) {
         throw new UserInputError(err.name, err)
       }
@@ -117,7 +111,7 @@ module.exports = {
       try {
         return !!(await User.findOneAndUpdate({ _id: id }, update))
       } catch (err) {
-        throw new ApolloError(err, "MONGO_UPDATE_ERROR")
+        throw new ApolloError(err, 'MONGO_UPDATE_ERROR')
       }
     },
 
@@ -130,8 +124,62 @@ module.exports = {
           { confirmed: true }
         ))
       } catch (err) {
-        throw new ApolloError(err, "MONGO_UPDATE_ERROR")
+        throw new ApolloError(err, 'MONGO_UPDATE_ERROR')
       }
-    }
-  }
+    },
+
+    resetPasswordRequest: async (_, { email }) => {
+      //validate email
+      try {
+        await Joi.validate({ email }, UserGeneric)
+      } catch (err) {
+        throw new UserInputError(err.name, err)
+      }
+
+      //Get user id, throw error if doesn't exist... maybe try/catch
+      const user = await User.findOne({ email })
+      if (!user) throw new AuthenticationError(`User <${email}> doesn't exist`)
+
+      // TODO: email confirm ? when resetting password automatically confirm email in "resetPassword"
+
+      // create token with user id
+      const { _id, firstname, lastname } = user
+      const token = await jwt.sign({ userId: _id }, RESET_SECRET, {
+        expiresIn: '1d',
+      })
+
+      // send email
+      sendResetPasswordEmail({ token, firstname, lastname, email }).catch(
+        console.error
+      )
+      console.log('resetting password for', email)
+      return true
+    },
+
+    resetPassword: async (_, { token, password }) => {
+      console.log('updating password!! :', token, password)
+
+      // validate password
+      try {
+        await Joi.validate({ password }, UserGeneric)
+      } catch (err) {
+        throw new UserInputError(err.name, err)
+      }
+
+      // extract id from token (try/catch)
+      const { userId } = await jwt.verify(token, RESET_SECRET)
+
+      // encrypt password
+      const hashPassword = await bcrypt.hash(password, 12).catch(console.err)
+
+      // update password in db
+      const user = await User.findOneAndUpdate(
+        { _id: userId },
+        { password: hashPassword }
+      )
+      console.log(user)
+      // sign in the user?
+      return true
+    },
+  },
 }

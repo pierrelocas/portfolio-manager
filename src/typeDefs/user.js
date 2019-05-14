@@ -1,7 +1,6 @@
 const gql = require('graphql-tag')
 
 module.exports = gql`
-
   enum Language {
     enUS
     frCA
@@ -23,22 +22,24 @@ module.exports = gql`
     token: String!
   }
 
-  extend type Query{
+  extend type Query {
     users: [User]
     me: User
   }
 
-  extend type Mutation{
+  extend type Mutation {
     signIn(email: String!, password: String!): Token!
     signUp(user: UserInput): Token!
     # signOut: Boolean!
     updateUser(id: ID!, update: UserInput!): Boolean!
     deleteUser(id: ID!): Boolean!
     confirmEmail(token: String!): Boolean!
+    resetPasswordRequest(email: String!): Boolean!
+    resetPassword(token: String!, password: String!): Boolean!
   }
 
-  input UserInput{
-    firstname: String 
+  input UserInput {
+    firstname: String
     lastname: String
     email: String
     confirmed: Boolean
