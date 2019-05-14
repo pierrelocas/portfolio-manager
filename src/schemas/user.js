@@ -18,7 +18,7 @@ const SignUp =  Joi.object().keys({
 
 const SignIn = Joi.object().keys({
   email: Joi.string().email({ minDomainAtoms: 2 }).required().label('Email'),
-  password: Joi.string().min(8).max(30).regex(/(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])/).label('Password').options({
+  password: Joi.string().min(8).max(30).regex(/(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])/).required().label('Password').options({
     language: {
       string : {
         regex : {

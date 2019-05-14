@@ -4,28 +4,48 @@
   "authentication": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyIkX18iOnsic3RyaWN0TW9kZSI6dHJ1ZSwiaW5zZXJ0aW5nIjp0cnVlLCJnZXR0ZXJzIjp7fSwiX2lkIjoiNWNkMDJmNmNmMjJkNTAwYmQ4N2RmYzM5Iiwid2FzUG9wdWxhdGVkIjpmYWxzZSwiYWN0aXZlUGF0aHMiOnsicGF0aHMiOnsibGFuZ3VhZ2UiOiJyZXF1aXJlIiwicGFzc3dvcmQiOiJyZXF1aXJlIiwiZW1haWwiOiJyZXF1aXJlIiwibGFzdG5hbWUiOiJyZXF1aXJlIiwiZmlyc3RuYW1lIjoicmVxdWlyZSJ9LCJzdGF0ZXMiOnsiaWdub3JlIjp7fSwiZGVmYXVsdCI6e30sImluaXQiOnt9LCJtb2RpZnkiOnt9LCJyZXF1aXJlIjp7Imxhbmd1YWdlIjp0cnVlLCJwYXNzd29yZCI6dHJ1ZSwiZW1haWwiOnRydWUsImxhc3RuYW1lIjp0cnVlLCJmaXJzdG5hbWUiOnRydWV9fSwic3RhdGVOYW1lcyI6WyJyZXF1aXJlIiwibW9kaWZ5IiwiaW5pdCIsImRlZmF1bHQiLCJpZ25vcmUiXX0sInBhdGhzVG9TY29wZXMiOnt9LCJjYWNoZWRSZXF1aXJlZCI6e30sInNlc3Npb24iOm51bGwsImVtaXR0ZXIiOnsiX2V2ZW50cyI6e30sIl9ldmVudHNDb3VudCI6MCwiX21heExpc3RlbmVycyI6MH0sIiRvcHRpb25zIjp7fSwiJHZlcnNpb25FcnJvciI6eyJtZXNzYWdlIjoiTm8gbWF0Y2hpbmcgZG9jdW1lbnQgZm91bmQgZm9yIGlkIFwiNWNkMDJmNmNmMjJkNTAwYmQ4N2RmYzM5XCIgdmVyc2lvbiAwIG1vZGlmaWVkUGF0aHMgXCJmaXJzdG5hbWUsIGxhc3RuYW1lLCBlbWFpbCwgcGFzc3dvcmQsIGxhbmd1YWdlXCIiLCJuYW1lIjoiVmVyc2lvbkVycm9yIiwidmVyc2lvbiI6MCwibW9kaWZpZWRQYXRocyI6WyJmaXJzdG5hbWUiLCJsYXN0bmFtZSIsImVtYWlsIiwicGFzc3dvcmQiLCJsYW5ndWFnZSJdfX0sImlzTmV3IjpmYWxzZSwiX2RvYyI6eyJfaWQiOiI1Y2QwMmY2Y2YyMmQ1MDBiZDg3ZGZjMzkiLCJmaXJzdG5hbWUiOiJwaWVycmUiLCJsYXN0bmFtZSI6IkxvY2FzIiwiZW1haWwiOiJwaWVycmUubG9jYXNAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTIkUDdVc1FYVklzUGZ2Sy9odGtVUjRJdVc5VGlTOWV1cnd3bHdjVWF4SUJlQzFBTHJEZHl5ME8iLCJsYW5ndWFnZSI6ImVuVVMiLCJjcmVhdGVkQXQiOiIyMDE5LTA1LTA2VDEyOjU4OjIwLjY1OFoiLCJ1cGRhdGVkQXQiOiIyMDE5LTA1LTA2VDEyOjU4OjIwLjY1OFoiLCJfX3YiOjB9LCJpYXQiOjE1NTcxNDc1MDB9.Vf52LgxMbf5QFZ4T00EtqZgK00J6s4o8WFrj08Dv5Dw"
 }
 
-# mutation{
-#   signUp(user:{firstname:"pierre", lastname:"Locas", email: "pierre.locas@test.com", password:"Secret123!", language:enUS}){
-#     token
-#   }
-# }
+ mutation{
+   signUp(user:{firstname:"pierre", lastname:"Locas", email: "pierre.locas@test.com", password:"Secret123!", language:enUS}){
+     token
+   }
+ }
 
-# mutation{
-#   signIn (email:"pierre.locas@gmail.com", password:"Secret123!"){
-#     token
-#   }
-# }
+ mutation{
+   signIn (email:"pierre.locas@gmail.com", password:"Secret123!"){
+     token
+   }
+ }
+
+mutation {
+  updateUser(id:"5cd1b5db88bf651f3a383808", 
+    update:{
+      firstme: "Pierre", 
+      email:"pierre.locas@gmail.com",
+      language:frCA
+    } 
+  )
+}
+
+mutation {
+  confirmEmail(token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2QxZGFhNjNiODM5ZjJlNmIyMzZlNDgiLCJpYXQiOjE1NTcyNTY4NzB9.thk6EX70uAhEp27JP4KVX2qZuqsj63mF5SLt5e0rV1Y")
+}
 
 
-# query {
-#   users{
-#     firstname
-#   }
-# }
+ query {
+   users{
+     firstname
+   }
+ }
 
 {
   me{
-    firstname
     _id
+    firstname
+    lastname
+    email
+    confirmed
+    language
+    createdAt
+    updatedAt
   }
 }
