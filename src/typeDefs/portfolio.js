@@ -1,7 +1,6 @@
 const gql = require('graphql-tag')
 
 module.exports = gql`
-
   enum Currency {
     CAD
     USD
@@ -24,22 +23,22 @@ module.exports = gql`
   }
 
   extend type Query {
-    portfolios(user_id: ID!): [Portfolio!]
+    portfolios: [Portfolio!]
     portfolio(id: ID!): Portfolio!
   }
 
   extend type Mutation {
-    createPortfolio(portfolio: PortfolioInput): Portfolio!
-    updatePortfolio(id: ID!, portfolio: PortfolioInput): Portfolio!
+    createPortfolio(portfolio: PortfolioInput!): Portfolio!
+    updatePortfolio(id: ID!, update: PortfolioInput): Boolean!
     deletePortfolio(id: ID!): Boolean!
+    deletePortfolios: Boolean
   }
 
   # Might be best to ommit the id in these cases, to be more reusable?
-  input PortfolioInput{
+  input PortfolioInput {
     # user_id: ID!  current user extracted from context
-    name: String! 
-    exchange: Exchange!
-    currency: Currency!
+    name: String
+    exchange: Exchange
+    currency: Currency
   }
-
 `

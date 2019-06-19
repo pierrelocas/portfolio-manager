@@ -14,23 +14,22 @@ module.exports = gql`
   }
 
   extend type Query {
-    transactions(portfolio_id: ID!): [Transaction!]
+    transactions(portfolioId: ID!): [Transaction!]
     transaction(id: ID!): Transaction!
   }
 
   extend type Mutation {
     createTransaction(transaction: TransactionInput!): Transaction!
-    updateTransaction(id: ID!, transaction: TransactionInput!): Transaction!
+    updateTransaction(id: ID!, update: TransactionInput): Boolean!
     deleteTransaction(id: ID!): Boolean!
   }
 
-  input TransactionInput{
-    portfolio_id: ID!
-    date: String!
-    stock: String!
-    quantity: Int!
-    price: Float!
-    commission: Float!
-  }  
-  
+  input TransactionInput {
+    portfolio_id: ID
+    date: String
+    stock: String
+    quantity: Int
+    price: Float
+    commission: Float
+  }
 `

@@ -55,5 +55,121 @@ mutation {
 }
 
 mutation {
-  resetPassword(token:"abc", password:"test")
+  resetPassword(token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2RhYTc0ZWJiZGZiYTRlZGUzNWM2ZjQiLCJpYXQiOjE1NTc4NDczNTEsImV4cCI6MTU1NzkzMzc1MX0.rPDEy8niWle7qEW92NpM5FfZN-wsdcbuYRLbFKXlcEw", password:"Test123!")
+}
+
+mutation {
+  createPortfolio(portfolio:{name:"Canadian Account", exchange:NYSE, currency:CAD}){
+    _id
+    user_id
+    name
+    exchange
+    currency
+    createdAt
+    updatedAt
+  }
+}
+
+mutation {
+  updatePortfolio(id:"5cdca53471d53b1095a790f5", update:{name:"Prefered US ACCOUNT"}){
+    _id
+    user_id
+    name
+    exchange
+    currency
+    createdAt
+    updatedAt
+  }
+}
+
+{
+  portfolios{
+    _id
+    user_id
+    name
+    exchange
+    currency
+    createdAt
+    updatedAt
+  }
+}
+
+{
+  portfolio(id:"5cdca53471d53b1095a790f5") {
+    _id
+    user_id
+    name
+    exchange
+    currency
+    createdAt
+    updatedAt
+  }
+}
+
+
+mutation {
+  createTransaction(transaction:{
+    portfolio_id:"5cdca53471d53b1095a790f5",
+  	date:"02/03/2017",
+    stock:"BCE",
+    quantity:10,
+    price: 22.50,
+    commission: 2.50
+  }){
+    _id
+    portfolio_id
+    date
+    stock
+    quantity
+    price
+    commission
+  }
+}
+
+{
+  transactions(portfolio_id:"5cdca53471d53b1095a790f5"){
+    _id
+    portfolio_id
+    date
+    stock
+    quantity
+    price
+    commission
+    createdAt
+    updatedAt
+  }
+}
+
+{
+  transaction(id:"5cdd792926eeea1708029408"){
+	  _id
+    portfolio_id
+    date
+    stock
+    quantity
+    price
+    commission
+    createdAt
+    updatedAt
+	}
+}
+
+const transactions = [
+  {stock : "BCE", date: "20170805", qty: -20, price: 23.65},
+  {stock : "BCE", date: "20170808", qty: 20, price: 26.65},
+  {stock : "BCE", date: "20170801", qty: -10, price: 25.65},
+  {stock : "NBC", date: "20180907", qty: -10, price: 56.00},
+  {stock : "NBC", date: "20180909", qty: 5, price: 58.00},
+]
+
+const stocks = transactions.map(t=> t.stock)
+
+const distinctStocks =  [... new Set(stocks)]
+
+const transac = {}
+
+for (const s of distinctStocks){
+  transac[s] = transactions
+    .filter(t => t.stock === s)
+    .sort((a, b)  => a.date > b.date ? 1: -1)
 }

@@ -2,7 +2,7 @@ const {
   UserInputError,
   AuthenticationError,
   ForbiddenError,
-  ApolloError,
+  ApolloError
 } = require('apollo-server')
 
 const bcrypt = require('bcrypt')
@@ -20,6 +20,7 @@ const sendResetPasswordEmail = require('../utils/mailer/resetPassword')
 
 module.exports = {
   Query: {
+    // TODO: Only an admin can queries all user
     users: async (parent, args, { isSignedIn }, info) => {
       if (!isSignedIn) throw new ForbiddenError('Must be a signed in admin.')
       return await User.find().catch(err => {
@@ -33,13 +34,13 @@ module.exports = {
         throw new AuthenticationError(
           'Failed to retrieve user, must be signed in'
         )
-      }),
+      })
   },
   Mutation: {
     signIn: async (_, { email, password }, context, info) => {
       // Validate input
       await Joi.validate({ email, password }, SignIn, {
-        abortEarly: false,
+        abortEarly: false
       }).catch(err => {
         throw new UserInputError(`${err.name} : ${err.message}`)
       })
@@ -69,16 +70,16 @@ module.exports = {
 
       const { _id, firstname, lastname, email } = await await new User({
         ...user,
-        password,
+        password
       }).save()
 
       const token = await jwt.sign({ userId: _id }, SECRET, {
-        expiresIn: 3,
+        expiresIn: 3
       })
 
       // TODO: send confirmaton email async
       const emailToken = await jwt.sign({ userId: _id }, EMAIL_SECRET, {
-        expiresIn: '1d',
+        expiresIn: '1d'
       })
 
       // TODO: Handle errors when sending email
@@ -89,7 +90,10 @@ module.exports = {
       return { token }
     },
 
-    deleteUser: (_, { id }) => users[0], //TODO : after portfolio and transaction for cascade delete
+    deleteUser: async (_, { id }, { isSignedIn, userId }) => {
+      await User.deleteUser(id)
+      return true
+    },
 
     updateUser: async (_, { id, update }, { isSignedIn, userId }, info) => {
       // validate if user is signed in
@@ -128,6 +132,7 @@ module.exports = {
       }
     },
 
+    // TODO : Error handling, implement a secret question
     resetPasswordRequest: async (_, { email }) => {
       //validate email
       try {
@@ -145,7 +150,7 @@ module.exports = {
       // create token with user id
       const { _id, firstname, lastname } = user
       const token = await jwt.sign({ userId: _id }, RESET_SECRET, {
-        expiresIn: '1d',
+        expiresIn: '1d'
       })
 
       // send email
@@ -156,6 +161,7 @@ module.exports = {
       return true
     },
 
+    // TODO : Error handling
     resetPassword: async (_, { token, password }) => {
       console.log('updating password!! :', token, password)
 
@@ -180,6 +186,6 @@ module.exports = {
       console.log(user)
       // sign in the user?
       return true
-    },
-  },
+    }
+  }
 }
