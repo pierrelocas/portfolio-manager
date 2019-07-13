@@ -16,13 +16,13 @@ const sendConfirmationEmail = async ({
     html: `
       <p>Hello ${firstname} ${lastname},</p> 
       <p>Please confirm your email by clicking on the following link: </p>
-      <a href="http://${HOST}:${CLIENT_PORT}/confirmation/${emailToken}">
-        http://${HOST}:${CLIENT_PORT}/confirmation/${emailToken}
+      <a href="http://${HOST}:${CLIENT_PORT}/?type=confirmation&token=${emailToken}">
+        click here
       </a>
       <p>Thank you for your registration.</p>`,
     text: `Hello ${firstname} ${lastname}, 
       Please confirm your email by clicking on the following link: 
-      http://${HOST}:${CLIENT_PORT}/confirmation/${emailToken}
+      http://${HOST}:${CLIENT_PORT}/?type=confirmation&token=${emailToken}
       Thank you for your registration.`
   }
 

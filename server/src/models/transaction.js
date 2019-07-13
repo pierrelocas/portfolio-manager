@@ -1,9 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
-// const User = require('./user')
 const Portfolio = require('./portfolio')
-console.log('1', Portfolio.modelName)
 
 const transactionSchema = new Schema(
   {
@@ -55,17 +53,17 @@ const transactionSchema = new Schema(
 //   return await user_id
 // })
 
-transactionSchema.pre('deleteTransaction', { document: true }, function() {
-  console.log(this.portfolio_id, 'Removing!')
-})
+// transactionSchema.pre('deleteTransaction', { document: true }, function() {
+//   console.log(this.portfolio_id, 'Removing!')
+// })
 
-transactionSchema.method('getOwnerId', async function() {
-  const { user_id } = await Portfolio.findById(
-    { _id: this.portfolio_id },
-    'user_id'
-  )
-  return user_id.toString()
-})
+// transactionSchema.method('getOwnerId', async function() {
+//   const { user_id } = await Portfolio.findById(
+//     { _id: this.portfolio_id },
+//     'user_id'
+//   )
+//   return user_id.toString()
+// })
 
 // transactionSchema.static('getOwnerId', async function(transacId) {
 //   console.log(transacId)
@@ -80,11 +78,11 @@ transactionSchema.method('getOwnerId', async function() {
 //   console.log(user_id)
 // })
 
-transactionSchema.methods.deleteTransaction = async function() {
-  const portfolio = await Portfolio.findById({ _id: this.portfolio_id })
+// transactionSchema.methods.deleteTransaction = async function() {
+//   const portfolio = await Portfolio.findById({ _id: this.portfolio_id })
 
-  console.log(portfolio)
-}
+//   console.log(portfolio)
+// }
 
 const Transaction = mongoose.model('Transaction', transactionSchema)
 module.exports = Transaction

@@ -22,7 +22,7 @@ module.exports = {
   Query: {
     // TODO: Only an admin can queries all user
     users: async (parent, args, { isSignedIn }, info) => {
-      if (!isSignedIn) throw new ForbiddenError('Must be a signed in admin.')
+      if (isSignedIn) throw new ForbiddenError('Must be a signed in admin.')
       return await User.find().catch(err => {
         throw new ApolloError(err, 'MONGO_FIND_ERROR')
       })
@@ -74,12 +74,12 @@ module.exports = {
       }).save()
 
       const token = await jwt.sign({ userId: _id }, SECRET, {
-        expiresIn: 3
+        // expiresIn: 9999999999999
       })
 
       // TODO: send confirmaton email async
       const emailToken = await jwt.sign({ userId: _id }, EMAIL_SECRET, {
-        expiresIn: '1d'
+        // expiresIn: '1d'
       })
 
       // TODO: Handle errors when sending email
@@ -150,7 +150,7 @@ module.exports = {
       // create token with user id
       const { _id, firstname, lastname } = user
       const token = await jwt.sign({ userId: _id }, RESET_SECRET, {
-        expiresIn: '1d'
+        // expiresIn: '1d'
       })
 
       // send email

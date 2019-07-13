@@ -77,6 +77,5 @@ portfolioSchema.statics.deletePortfolios = async function(user_id) {
 // })
 
 const Portfolio = mongoose.model('Portfolio', portfolioSchema)
-console.log(Portfolio.modelName)
 
 module.exports = Portfolio

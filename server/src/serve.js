@@ -1,6 +1,6 @@
 // TODO: Implement ssl
 
-const { ApolloServer } = require('apollo-server')
+const { ApolloServer, ApolloError } = require('apollo-server')
 
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
@@ -17,7 +17,7 @@ const {
   DB_USER,
   DB_PASS,
   DB_NAME,
-  SECRET,
+  SECRET
 } = process.env
 
 mongoose
@@ -25,7 +25,7 @@ mongoose
     `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true`,
     {
       useNewUrlParser: true,
-      useCreateIndex: true,
+      useCreateIndex: true
     }
   )
   .then(() =>
@@ -35,22 +35,24 @@ mongoose
       // TODO : Only userid and roles in token because in case of update user info will change
       context: async ({ req }) => {
         const {
-          headers: { authentication },
+          headers: { authorization }
         } = req
         try {
-          if (!authentication) throw new Error('No authenticaton property')
+          if (!authorization) throw new Error('No authorization property')
 
-          const token = authentication.split(' ')[1]
+          const token = authorization.split(' ')[1]
           if (!token) throw new Error('Bearer token malformed')
 
           const { userId } = await jwt.verify(token, SECRET)
 
-          return { userId, isSignedIn: true }
-        } catch (err) {
-          console.warn('Context Warning :', err.name, err.message)
-          return { userId: null, isSignedIn: false }
+          return { userId, isSignedIn: true, ok: true, error: null }
+        } catch (error) {
+          console.warn('Context Warning :', error.name, error.message)
+          // throw new ApolloError(error)
+          // return error
+          // return { userId: null, isSignedIn: false, ok: false, error }
         }
-      },
+      }
     })
       .listen(SERVER_PORT, HOST)
       .then(({ url }) => {

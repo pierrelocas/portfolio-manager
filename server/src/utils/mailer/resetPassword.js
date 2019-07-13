@@ -7,7 +7,7 @@ const sendResetPasswordEmail = async ({
   token,
   firstname,
   lastname,
-  email,
+  email
 }) => {
   const mailOptions = {
     from: EMAIL_USER,
@@ -16,14 +16,14 @@ const sendResetPasswordEmail = async ({
     html: `
       <p>Hello ${firstname} ${lastname},</p> 
       <p>Please follow the link below in order to reset your password. </p>
-      <a href="http://${HOST}:${CLIENT_PORT}/confirmation/${token}">
-        http://${HOST}:${CLIENT_PORT}/reset-password/${token}
+      <a href="http://${HOST}:${CLIENT_PORT}/?type=reset&token=${token}">
+        click here
       </a>
       <p>Salutations</p>`,
     text: `Hello ${firstname} ${lastname}, 
       Please follow the link below in order to reset your password. 
-      http://${HOST}:${CLIENT_PORT}/reset-password/${token}
-      Salutations.`,
+      http://${HOST}:${CLIENT_PORT}/?type=reset&token=${token}
+      Salutations.`
   }
 
   const info = await transporter.sendMail(mailOptions)
