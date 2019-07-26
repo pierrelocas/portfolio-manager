@@ -6,12 +6,12 @@ import { gql } from 'apollo-boost'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
+import Checkbox from '@material-ui/core/Checkbox'
 import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
+import Box from '@material-ui/core/Box'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -35,11 +35,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const SIGN_IN = gql`
-  mutation signIn($email: String!, $password: String!) {
-    signIn(email: $email, password: $password) {
-      token
-    }
+const RESET_PASSWORD = gql`
+  mutation resetPassword($token: String!, $password: String!) {
+    resetPassword(token: $token, password: $password)
   }
 `
 
@@ -55,70 +53,73 @@ function MadeWithLove() {
   )
 }
 
-export default function SignIn(props) {
-  const { setPage, authenticate } = props
+export default function Reset(props) {
+  const { token } = props
+
   const classes = useStyles()
 
-  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
-  const [signIn, { error, data }] = useMutation(SIGN_IN, {
+  const [resetPassword, { error, data }] = useMutation(RESET_PASSWORD, {
     variables: {
-      email,
+      token,
       password
     }
   })
 
   const handleSubmit = async event => {
     event.preventDefault()
-
+    console.log('submitting...')
     const {
-      data: {
-        signIn: { token }
-      }
-    } = await signIn()
-    localStorage.setItem('token', token)
-    authenticate()
+      data: { resetPassword: success }
+    } = await resetPassword()
+    console.log(await success)
+    if (success) {
+      alert(`Password updated successfully.`)
+      window.location.replace('http://localhost:3000')
+    } else {
+      alert(`Failed, please verify that new password is valid and try again`)
+    }
   }
-
   return (
     <div className={classes.paper}>
       <Avatar className={classes.avatar}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Sign in
+        Reset Password
       </Typography>
       <form className={classes.form} noValidate onSubmit={handleSubmit}>
         <TextField
-          variant="outlined"
           margin="normal"
-          required
-          fullWidth
-          id="email"
-          label="Email Address"
-          name="email"
-          autoComplete="email"
-          autoFocus
-          value={email}
-          onChange={event => setEmail(event.target.value)}
-        />
-        <TextField
           variant="outlined"
-          margin="normal"
           required
           fullWidth
           name="password"
-          label="Password"
+          label="New Password"
           type="password"
           id="password"
           autoComplete="current-password"
           value={password}
           onChange={event => setPassword(event.target.value)}
         />
+        <TextField
+          margin="normal"
+          variant="outlined"
+          required
+          fullWidth
+          name="confirm-password"
+          label="Confirm Password"
+          type="password"
+          id="confirm-password"
+          autoComplete="confirm-password"
+          value={confirmPassword}
+          onChange={event => setConfirmPassword(event.target.value)}
+        />
         <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
-          label="Remember me"
+          control={<Checkbox value="allowExtraEmails" color="primary" />}
+          label="I want to receive inspiration, marketing promotions and updates via email."
         />
         <Button
           type="submit"
@@ -127,33 +128,19 @@ export default function SignIn(props) {
           color="primary"
           className={classes.submit}
         >
-          Sign In
+          Update Password
         </Button>
-        <Grid container>
-          <Grid item xs>
-            <Link
-              component="button"
-              variant="body2"
-              onClick={event => {
-                event.preventDefault()
-                setPage('forgot')
-              }}
-            >
-              Forgot password?
-            </Link>
-          </Grid>
-          <Grid item>
-            <Link
-              component="button"
-              variant="body2"
-              onClick={event => {
-                event.preventDefault()
-                setPage('signUp')
-              }}
-            >
-              {"Don't have an account? Sign Up"}
-            </Link>
-          </Grid>
+        <Grid container justify="flex-end">
+          <Link
+            component="button"
+            variant="body2"
+            onClick={event => {
+              event.preventDefault()
+              setPage('signIn')
+            }}
+          >
+            Already have an account? Sign in
+          </Link>
         </Grid>
         <Box mt={5}>
           <MadeWithLove />

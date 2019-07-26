@@ -23,6 +23,8 @@ module.exports = gql`
   }
 
   extend type Query {
+    isSignedIn: Boolean
+    isConfirmed: Boolean
     users: [User]
     me: User
   }

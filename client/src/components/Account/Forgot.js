@@ -35,11 +35,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const SIGN_IN = gql`
-  mutation signIn($email: String!, $password: String!) {
-    signIn(email: $email, password: $password) {
-      token
-    }
+const RESET_PASSWORD_REQUEST = gql`
+  mutation resetPasswordRequest($email: String!) {
+    resetPasswordRequest(email: $email)
   }
 `
 
@@ -55,30 +53,33 @@ function MadeWithLove() {
   )
 }
 
-export default function SignIn(props) {
-  const { setPage, authenticate } = props
+export default function Forgot(props) {
+  const { setPage } = props
   const classes = useStyles()
 
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
 
-  const [signIn, { error, data }] = useMutation(SIGN_IN, {
-    variables: {
-      email,
-      password
+  const [resetPasswordRequest, { error, data }] = useMutation(
+    RESET_PASSWORD_REQUEST,
+    {
+      variables: {
+        email
+      }
     }
-  })
+  )
 
   const handleSubmit = async event => {
     event.preventDefault()
 
+    console.log(email)
     const {
-      data: {
-        signIn: { token }
-      }
-    } = await signIn()
-    localStorage.setItem('token', token)
-    authenticate()
+      data: { resetPasswordRequest: success }
+    } = await resetPasswordRequest()
+    console.log(await success)
+    success
+      ? alert(`Procedure to change your password have been sent to <${email}>.`)
+      : alert(`Failed, please verify the email and try again.`)
+    // setSignedIn(true)
   }
 
   return (
@@ -87,7 +88,7 @@ export default function SignIn(props) {
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Sign in
+        Forgot Password
       </Typography>
       <form className={classes.form} noValidate onSubmit={handleSubmit}>
         <TextField
@@ -103,19 +104,6 @@ export default function SignIn(props) {
           value={email}
           onChange={event => setEmail(event.target.value)}
         />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          name="password"
-          label="Password"
-          type="password"
-          id="password"
-          autoComplete="current-password"
-          value={password}
-          onChange={event => setPassword(event.target.value)}
-        />
         <FormControlLabel
           control={<Checkbox value="remember" color="primary" />}
           label="Remember me"
@@ -127,7 +115,7 @@ export default function SignIn(props) {
           color="primary"
           className={classes.submit}
         >
-          Sign In
+          Reset Password
         </Button>
         <Grid container>
           <Grid item xs>
@@ -136,10 +124,10 @@ export default function SignIn(props) {
               variant="body2"
               onClick={event => {
                 event.preventDefault()
-                setPage('forgot')
+                setPage('signIn')
               }}
             >
-              Forgot password?
+              Sign In
             </Link>
           </Grid>
           <Grid item>

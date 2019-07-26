@@ -34,6 +34,7 @@ mongoose
       resolvers,
       // TODO : Only userid and roles in token because in case of update user info will change
       context: async ({ req }) => {
+        console.log('Server request')
         const {
           headers: { authorization }
         } = req
@@ -43,14 +44,18 @@ mongoose
           const token = authorization.split(' ')[1]
           if (!token) throw new Error('Bearer token malformed')
 
-          const { userId } = await jwt.verify(token, SECRET)
-
-          return { userId, isSignedIn: true, ok: true, error: null }
+          const { userId, confirmed } = await jwt.verify(token, SECRET)
+          return {
+            userId,
+            isSignedIn: true,
+            isConfirmed: confirmed,
+            error: null
+          }
         } catch (error) {
-          console.warn('Context Warning :', error.name, error.message)
+          // console.warn('Context Warning :', error.name, error.message)
           // throw new ApolloError(error)
           // return error
-          // return { userId: null, isSignedIn: false, ok: false, error }
+          return { isSignedIn: false, isConfirmed: false, error }
         }
       }
     })

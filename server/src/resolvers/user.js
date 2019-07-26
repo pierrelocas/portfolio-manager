@@ -15,11 +15,23 @@ const { SECRET, EMAIL_SECRET, RESET_SECRET } = process.env
 
 const { User } = require('../models')
 const { SignIn, SignUp, UserGeneric } = require('../schemas')
-const sendConfirmationEmail = require('../utils/mailer/confirmation')
-const sendResetPasswordEmail = require('../utils/mailer/resetPassword')
+const sendConfirmationEmail = require('../utils/mailer/activate')
+const sendResetPasswordEmail = require('../utils/mailer/reset')
 
 module.exports = {
   Query: {
+    isSignedIn: (parent, args, { isSignedIn }) => {
+      console.log('resolver: isSignedIn')
+      return isSignedIn
+    },
+    isConfirmed: async (parent, args, { userId }) => {
+      try {
+        const user = await User.findById(userId)
+        return user.confirmed
+      } catch (e) {
+        return false
+      }
+    },
     // TODO: Only an admin can queries all user
     users: async (parent, args, { isSignedIn }, info) => {
       if (isSignedIn) throw new ForbiddenError('Must be a signed in admin.')
@@ -61,6 +73,7 @@ module.exports = {
       return { token }
     },
 
+    // Confirmation email should be separate mutation for reusability
     signUp: async (_, { user }) => {
       await Joi.validate(user, SignUp, { abortEarly: false }).catch(err => {
         throw new UserInputError(`${err.name} : ${err.message}`)

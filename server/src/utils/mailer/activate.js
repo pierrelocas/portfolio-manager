@@ -1,7 +1,7 @@
-const { transporter } = require("./transporter")
+const { transporter } = require('./transporter')
 
 const { EMAIL_USER, HOST, CLIENT_PORT } = process.env
-const SUBJECT = "Porfolio-Manager email confirmation"
+const SUBJECT = 'Porfolio-Manager email confirmation'
 
 const sendConfirmationEmail = async ({
   emailToken,
@@ -16,19 +16,19 @@ const sendConfirmationEmail = async ({
     html: `
       <p>Hello ${firstname} ${lastname},</p> 
       <p>Please confirm your email by clicking on the following link: </p>
-      <a href="http://${HOST}:${CLIENT_PORT}/?type=confirmation&token=${emailToken}">
+      <a href="http://${HOST}:${CLIENT_PORT}/?type=activate&token=${emailToken}">
         click here
       </a>
       <p>Thank you for your registration.</p>`,
     text: `Hello ${firstname} ${lastname}, 
       Please confirm your email by clicking on the following link: 
-      http://${HOST}:${CLIENT_PORT}/?type=confirmation&token=${emailToken}
+      http://${HOST}:${CLIENT_PORT}/?type=activate&token=${emailToken}
       Thank you for your registration.`
   }
 
   const info = await transporter.sendMail(mailOptions)
 
-  console.log("Email confirmation sent: %s", info.messageId)
+  console.log('Email confirmation sent: %s', info.messageId)
 }
 
 module.exports = sendConfirmationEmail

@@ -56,13 +56,14 @@ function MadeWithLove() {
 }
 
 export default function SignUp(props) {
-  const { setSignedIn, setPage } = props
+  const { authenticate, setPage } = props
   const classes = useStyles()
 
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   const [signUp, { error, data }] = useMutation(SIGN_UP, {
     variables: {
@@ -84,7 +85,7 @@ export default function SignUp(props) {
       }
     } = await signUp()
     localStorage.setItem('token', token)
-    setSignedIn(true)
+    authenticate()
   }
 
   return (
@@ -151,6 +152,19 @@ export default function SignUp(props) {
           autoComplete="current-password"
           value={password}
           onChange={event => setPassword(event.target.value)}
+        />
+        <TextField
+          margin="normal"
+          variant="outlined"
+          required
+          fullWidth
+          name="confirm-password"
+          label="Confirm Password"
+          type="password"
+          id="confirm-password"
+          autoComplete="confirm-password"
+          value={confirmPassword}
+          onChange={event => setConfirmPassword(event.target.value)}
         />
         <FormControlLabel
           control={<Checkbox value="allowExtraEmails" color="primary" />}
