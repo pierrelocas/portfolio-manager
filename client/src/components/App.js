@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
 import Account from './Account'
-import Dashboard from './Dashboard'
+import Layout from './Layout'
 
 /**
  * TODO: setContext isSignedIn
@@ -39,7 +39,7 @@ export default function App(props) {
 
   if (loading) return <div>Loading...</div>
   return isSignedIn && isConfirmed ? (
-    <Dashboard authenticate={refetch} />
+    <Layout authenticate={refetch} />
   ) : (
     <Account
       authenticate={refetch}

@@ -63,6 +63,7 @@ export default function Account(props) {
 
   const classes = useStyles()
 
+  // TODO : No need for a component here... just a variable and switch
   function Content() {
     switch (page) {
       case 'signIn':
