@@ -18,6 +18,7 @@ module.exports = gql`
     name: String!
     exchange: Exchange!
     currency: Currency!
+    favorite: Boolean
     createdAt: String
     updatedAt: String
   }
@@ -40,5 +41,6 @@ module.exports = gql`
     name: String
     exchange: Exchange
     currency: Currency
+    favorite: Boolean
   }
 `

@@ -18,7 +18,7 @@ import Positions from '../Positions'
 import Statistics from '../Statistics'
 import Profile from '../Profile'
 
-const GET_USER = gql`
+const GET_PORTFOLIOS = gql`
   {
     me {
       _id
@@ -32,6 +32,7 @@ const GET_USER = gql`
       name
       exchange
       currency
+      favorite
     }
   }
 `
@@ -65,11 +66,15 @@ export default function Layout(props) {
   const classes = useStyles()
   const [open, setOpen] = useState(true)
   const [title, setTitle] = useState('Dashboard')
+  const [activePortfolio, setActivePortfolio] = useState()
 
   const {
     loading,
-    data: { me, portfolio }
-  } = useQuery(GET_USER)
+    error,
+    data: { me, portfolios }
+  } = useQuery(GET_PORTFOLIOS)
+
+  if (loading) return <h3>Loading...</h3>
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -83,19 +88,28 @@ export default function Layout(props) {
     authenticate()
   }
 
+  if (!activePortfolio && portfolios) {
+    const { _id } = portfolios.find(p => p.favorite)
+    setActivePortfolio(_id)
+  }
+  console.log(activePortfolio)
   let content
   switch (title) {
     case 'Dashboard':
       content = <Dashboard />
       break
     case 'Portfolios':
-      content = <Portfolios />
+      content = <Portfolios portfolios={portfolios} />
       break
     case 'Transactions':
-      content = <Transactions />
+      content = (
+        <Transactions portfolios={portfolios} portfolioId={activePortfolio} />
+      )
       break
     case 'Positions':
-      content = <Positions />
+      content = (
+        <Positions portfolios={portfolios} portfolioId={activePortfolio} />
+      )
       break
     case 'Statistics':
       content = <Statistics />

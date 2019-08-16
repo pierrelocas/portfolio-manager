@@ -29,6 +29,10 @@ const portfolioSchema = new Schema(
     currency: {
       type: String,
       require: true
+    },
+    favorite: {
+      type: Boolean,
+      required: false
     }
   },
   {
