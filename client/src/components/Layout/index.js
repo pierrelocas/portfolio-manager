@@ -9,7 +9,8 @@ import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
 
 import Topbar from './Topbar'
-import Sidebar from './Sidebar'
+import MenuBar from './MenuBar'
+import ActionBar from './ActionBar'
 
 import Dashboard from '../Dashboard'
 import Portfolios from '../Portfolios'
@@ -92,14 +93,16 @@ export default function Layout(props) {
     const { _id } = portfolios.find(p => p.favorite)
     setActivePortfolio(_id)
   }
-  console.log(activePortfolio)
+
   let content
   switch (title) {
     case 'Dashboard':
       content = <Dashboard />
       break
     case 'Portfolios':
-      content = <Portfolios portfolios={portfolios} />
+      content = (
+        <Portfolios portfolios={portfolios} activePortfolio={activePortfolio} />
+      )
       break
     case 'Transactions':
       content = (
@@ -130,7 +133,7 @@ export default function Layout(props) {
         handleSignOut={handleSignOut}
         open={open}
       />
-      <Sidebar
+      <MenuBar
         handleDrawerClose={handleDrawerClose}
         open={open}
         setTitle={setTitle}
@@ -141,6 +144,14 @@ export default function Layout(props) {
         {content}
         <MadeWithLove />
       </main>
+      <section>
+        <div className={classes.appBarSpacer} />
+        <ActionBar
+          portfolios={portfolios}
+          activePortfolio={activePortfolio}
+          setActivePortfolio={setActivePortfolio}
+        />
+      </section>
     </div>
   )
 }

@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Portfolios = props => {
-  const { portfolios } = props
+  const { portfolios, activePortfolio } = props
   const classes = useStyles()
   console.log(portfolios)
   return (
@@ -23,7 +23,7 @@ const Portfolios = props => {
       <Grid container spacing={3}>
         {portfolios.map(portfolio => (
           <Grid item xs={12} md={4} lg={3} key={portfolio._id}>
-            <Portfolio {...portfolio} />
+            <Portfolio {...portfolio} activePortfolio={activePortfolio} />
           </Grid>
         ))}
       </Grid>

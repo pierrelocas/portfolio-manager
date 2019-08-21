@@ -19,15 +19,27 @@ const useStyles = makeStyles(theme => ({
   },
   fixedHeight: {
     height: 240
+  },
+  active: {
+    borderBottomStyle: 'solid',
+    borderBottomWidth: 3,
+    borderBottomColor: theme.palette.primary.main
   }
 }))
 
 export default function Portfolio(props) {
-  const { _id, name, exchange, currency } = props
+  const { _id, name, exchange, currency, activePortfolio } = props
   const classes = useStyles()
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
+
   return (
-    <Paper className={fixedHeightPaper} elevation={5}>
+    <Paper
+      className={clsx(
+        classes.paper,
+        classes.fixedHeight,
+        _id == activePortfolio && classes.active
+      )}
+      elevation={5}
+    >
       <Title>{name}</Title>
       <Typography component="p" variant="h4">
         $3,024.00
