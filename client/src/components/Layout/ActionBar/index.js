@@ -1,18 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import Paper from '@material-ui/core/Paper'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
+import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 import PortfolioAction from './PortfolioAction'
+import TransactionAction from './TransactionAction'
+
 import { actionWidth } from '../config'
 import { height } from '@material-ui/system'
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: actionWidth
+  },
+  paper: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row-reverse' // Only reverse when in compact mode
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -22,25 +37,37 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function ActionBar(props) {
-  const { portfolios, activePortfolio, setActivePortfolio } = props
+  const { portfolios, activePortfolio, setActivePortfolio, QUERY } = props
   const classes = useStyles()
-  const [expanded, setExpanded] = React.useState(false)
+  const [expanded, setExpanded] = useState({
+    portfolio: false,
+    edit: false,
+    transaction: false,
+    setting: false
+  })
 
   const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false)
+    setExpanded({ ...expanded, [panel]: isExpanded })
   }
 
   return (
     <div className={classes.root}>
-      <ExpansionPanel
-        expanded={expanded === 'panel1'}
-        onChange={handleChange('panel1')}
-      >
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
+      <Paper className={classes.paper}>
+        <Typography component="h2" variant="h6" color="primary">
+          Actions
+        </Typography>
+        <IconButton
+          size="small"
+          onClick={() => console.log('minimizing Action bar')}
         >
+          <ChevronRightIcon />
+        </IconButton>
+      </Paper>
+      <ExpansionPanel
+        expanded={expanded.portfolio}
+        onChange={handleChange('portfolio')}
+      >
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}>Portfolio</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
@@ -52,14 +79,18 @@ export default function ActionBar(props) {
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
-        expanded={expanded === 'panel2'}
-        onChange={handleChange('panel2')}
+        expanded={expanded.transaction}
+        onChange={handleChange('transaction')}
       >
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2bh-content"
-          id="panel2bh-header"
-        >
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography className={classes.heading}>Transaction</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <TransactionAction activePortfolio={activePortfolio} QUERY={QUERY} />
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+      <ExpansionPanel expanded={expanded.edit} onChange={handleChange('edit')}>
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}>Edit</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
@@ -71,32 +102,10 @@ export default function ActionBar(props) {
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
-        expanded={expanded === 'panel3'}
-        onChange={handleChange('panel3')}
+        expanded={expanded.setting}
+        onChange={handleChange('setting')}
       >
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel3bh-content"
-          id="panel3bh-header"
-        >
-          <Typography className={classes.heading}>Transaction</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Typography>
-            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer
-            sit amet egestas eros, vitae egestas augue. Duis vel est augue.
-          </Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel
-        expanded={expanded === 'panel4'}
-        onChange={handleChange('panel4')}
-      >
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel4bh-content"
-          id="panel4bh-header"
-        >
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}>Advanced Settings</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>

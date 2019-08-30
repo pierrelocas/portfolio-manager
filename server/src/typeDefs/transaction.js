@@ -14,7 +14,7 @@ module.exports = gql`
   }
 
   extend type Query {
-    transactions(portfolioId: ID!): [Transaction!]
+    transactions(portfolioId: ID): [Transaction!]
     transaction(id: ID!): Transaction!
   }
 

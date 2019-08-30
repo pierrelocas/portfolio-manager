@@ -19,8 +19,8 @@ import Positions from '../Positions'
 import Statistics from '../Statistics'
 import Profile from '../Profile'
 
-const GET_PORTFOLIOS = gql`
-  {
+const GET_DATA = gql`
+  query getData($portfolioId: ID) {
     me {
       _id
       firstname
@@ -34,6 +34,17 @@ const GET_PORTFOLIOS = gql`
       exchange
       currency
       favorite
+    }
+    transactions(portfolioId: $portfolioId) {
+      _id
+      portfolio_id
+      date
+      stock
+      quantity
+      price
+      commission
+      createdAt
+      updatedAt
     }
   }
 `
@@ -67,13 +78,15 @@ export default function Layout(props) {
   const classes = useStyles()
   const [open, setOpen] = useState(true)
   const [title, setTitle] = useState('Dashboard')
-  const [activePortfolio, setActivePortfolio] = useState()
+  const [activePortfolio, setActivePortfolio] = useState('')
 
   const {
     loading,
     error,
-    data: { me, portfolios }
-  } = useQuery(GET_PORTFOLIOS)
+    data: { me, portfolios, transactions }
+  } = useQuery(GET_DATA, {
+    variables: { portfolioId: activePortfolio }
+  })
 
   if (loading) return <h3>Loading...</h3>
 
@@ -101,18 +114,18 @@ export default function Layout(props) {
       break
     case 'Portfolios':
       content = (
-        <Portfolios portfolios={portfolios} activePortfolio={activePortfolio} />
+        <Portfolios
+          portfolios={portfolios}
+          activePortfolio={activePortfolio}
+          setActivePortfolio={setActivePortfolio}
+        />
       )
       break
     case 'Transactions':
-      content = (
-        <Transactions portfolios={portfolios} portfolioId={activePortfolio} />
-      )
+      content = <Transactions transactions={transactions} />
       break
     case 'Positions':
-      content = (
-        <Positions portfolios={portfolios} portfolioId={activePortfolio} />
-      )
+      content = <Positions transactions={transactions} />
       break
     case 'Statistics':
       content = <Statistics />
@@ -150,6 +163,7 @@ export default function Layout(props) {
           portfolios={portfolios}
           activePortfolio={activePortfolio}
           setActivePortfolio={setActivePortfolio}
+          QUERY={GET_DATA}
         />
       </section>
     </div>

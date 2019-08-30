@@ -37,9 +37,9 @@ const transactionSchema = new Schema(
     }
   },
   {
-    timestamps: true,
-    toObject: { virtuals: true },
-    toJSON: { virtuals: true }
+    timestamps: true
+    // toObject: { virtuals: true },
+    // toJSON: { virtuals: true }
   }
 )
 // NOTE: this is an interesting method, except the fact it needs to be async, which cause it hard to handle

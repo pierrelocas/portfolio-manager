@@ -28,7 +28,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function Portfolio(props) {
-  const { _id, name, exchange, currency, activePortfolio } = props
+  const {
+    _id,
+    name,
+    exchange,
+    currency,
+    activePortfolio,
+    setActivePortfolio
+  } = props
   const classes = useStyles()
 
   return (
@@ -39,6 +46,7 @@ export default function Portfolio(props) {
         _id == activePortfolio && classes.active
       )}
       elevation={5}
+      onClick={() => setActivePortfolio(_id)}
     >
       <Title>{name}</Title>
       <Typography component="p" variant="h4">

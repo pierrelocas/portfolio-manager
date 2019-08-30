@@ -16,22 +16,6 @@ import TableRow from '@material-ui/core/TableRow'
 import Title from '../Dashboard/Title'
 import Transaction from './Transaction'
 
-const GET_TRANSACTIONS = gql`
-  query transactions($portfolioId: ID!) {
-    transactions(portfolioId: $portfolioId) {
-      _id
-      portfolio_id
-      date
-      stock
-      quantity
-      price
-      commission
-      createdAt
-      updatedAt
-    }
-  }
-`
-
 const useStyles = makeStyles(theme => ({
   container: {
     paddingTop: theme.spacing(4),
@@ -66,18 +50,8 @@ const FormatDateTime = props => {
 }
 
 const Transactions = props => {
-  const { portfolios, portfolioId } = props
+  const { transactions } = props
   const classes = useStyles()
-
-  const {
-    loading,
-    error,
-    data: { transactions }
-  } = useQuery(GET_TRANSACTIONS, {
-    variables: { portfolioId }
-  })
-  if (loading) return <h3>Loading...</h3>
-  if (error) return <h3>{error}</h3>
 
   return (
     <Container maxWidth="lg" className={classes.container}>

@@ -1,6 +1,4 @@
 import React from 'react'
-import { useQuery } from '@apollo/react-hooks'
-import { gql } from 'apollo-boost'
 
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -14,23 +12,6 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 
 import Title from '../Dashboard/Title'
-// import Transaction from './Transaction'
-
-const GET_TRANSACTIONS = gql`
-  query transactions($portfolioId: ID!) {
-    transactions(portfolioId: $portfolioId) {
-      _id
-      portfolio_id
-      date
-      stock
-      quantity
-      price
-      commission
-      createdAt
-      updatedAt
-    }
-  }
-`
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -66,26 +47,13 @@ const FormatDateTime = props => {
 }
 
 const Positions = props => {
-  const { portfolios, portfolioId } = props
+  const { transactions } = props
   const classes = useStyles()
 
-  const {
-    loading,
-    error,
-    data: { transactions }
-  } = useQuery(GET_TRANSACTIONS, {
-    variables: { portfolioId }
-  })
-  if (loading) return <h3>Loading...</h3>
-  if (error) return <h3>{error}</h3>
-  // console.log(transactions)
   const stocks = transactions.map(t => t.stock)
 
   const distinctStocks = [...new Set(stocks)]
 
-  // console.log(stocks)
-  // console.log(distinctStocks)
-  // const transac
   const positions = []
 
   const getNetPrice = (quantity, price, commission) =>

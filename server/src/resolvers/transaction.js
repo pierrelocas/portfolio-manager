@@ -13,8 +13,17 @@ const { CreateTransaction, GenericTransaction } = require('../schemas')
 
 module.exports = {
   Query: {
-    transactions: (_, { portfolioId: portfolio_id }, { userId, isSignedIn }) =>
-      Transaction.find({ portfolio_id }),
+    transactions: async (
+      _,
+      { portfolioId: portfolio_id },
+      { userId, isSignedIn }
+    ) => {
+      if (!portfolio_id) {
+        // if no portfolio selected, get transactions of the favorite portfolio
+        portfolio_id = await Portfolio.findOne({ favorite: true })
+      }
+      return Transaction.find({ portfolio_id })
+    },
     transaction: (_, { id: _id }) => Transaction.findOne({ _id })
   },
   Mutation: {
@@ -29,7 +38,8 @@ module.exports = {
       })
 
       const newTransaction = new Transaction({ ...transaction })
-      const result = newTransaction.save()
+      const result = await newTransaction.save()
+      console.log('result', result)
       return result
     },
 
