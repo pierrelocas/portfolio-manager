@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
+import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
@@ -18,6 +19,8 @@ import Transactions from '../Transactions'
 import Positions from '../Positions'
 import Statistics from '../Statistics'
 import Profile from '../Profile'
+
+import { actionWidth, actionWidthCompact } from './config'
 
 const GET_DATA = gql`
   query getData($portfolioId: ID) {
@@ -69,7 +72,34 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     height: '100vh',
-    overflow: 'auto'
+    // overflow: 'auto',
+    marginRight: actionWidth,
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  contentWide: {
+    marginRight: actionWidthCompact,
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    })
+  },
+  actionBar: {
+    position: 'absolute',
+    right: 0,
+    transition: theme.transitions.create('right', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  actionBarClosed: {
+    right: -(actionWidth - actionWidthCompact),
+    transition: theme.transitions.create('right', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    })
   }
 }))
 
@@ -77,6 +107,7 @@ export default function Layout(props) {
   const { authenticate } = props
   const classes = useStyles()
   const [open, setOpen] = useState(true)
+  const [actionOn, setActionOn] = useState(true)
   const [title, setTitle] = useState('Dashboard')
   const [activePortfolio, setActivePortfolio] = useState('')
 
@@ -88,7 +119,12 @@ export default function Layout(props) {
     variables: { portfolioId: activePortfolio }
   })
 
-  if (loading) return <h3>Loading...</h3>
+  if (loading)
+    return (
+      <h3>
+        Loading <small>layout</small>...
+      </h3>
+    )
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -152,18 +188,25 @@ export default function Layout(props) {
         setTitle={setTitle}
         title={title}
       />
-      <main className={classes.content}>
+      <main className={clsx(classes.content, !actionOn && classes.contentWide)}>
         <div className={classes.appBarSpacer} />
         {content}
         <MadeWithLove />
       </main>
-      <section>
+      <section
+        className={clsx(
+          classes.actionBar,
+          !actionOn && classes.actionBarClosed
+        )}
+      >
         <div className={classes.appBarSpacer} />
         <ActionBar
           portfolios={portfolios}
           activePortfolio={activePortfolio}
           setActivePortfolio={setActivePortfolio}
           QUERY={GET_DATA}
+          setActionOn={setActionOn}
+          actionOn={actionOn}
         />
       </section>
     </div>
