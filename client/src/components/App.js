@@ -29,15 +29,12 @@ const AUTHENTICATION = gql`
 `
 
 export default function App(props) {
-  const {
-    loading,
-    data: { isSignedIn, isConfirmed },
-    refetch
-  } = useQuery(AUTHENTICATION, {
+  const { loading, data, refetch } = useQuery(AUTHENTICATION, {
     fetchPolicy: 'network-only'
   })
 
   if (loading) return <div>Loading...</div>
+  const { isSignedIn, isConfirmed } = data
   return isSignedIn && isConfirmed ? (
     <Layout authenticate={refetch} />
   ) : (

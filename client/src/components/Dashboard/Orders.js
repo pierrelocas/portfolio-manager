@@ -92,9 +92,10 @@ export default function Orders() {
         </TableBody>
       </Table>
       <div className={classes.seeMore}>
-        <Link color="primary" href="javascript:;">
+        {/* <Link color="primary" href="javascript:;">
           See more orders
-        </Link>
+        </Link> */}
+        <h4>See more orders</h4>
       </div>
     </React.Fragment>
   )

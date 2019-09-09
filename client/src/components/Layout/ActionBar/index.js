@@ -18,6 +18,9 @@ import SettingsIcon from '@material-ui/icons/Settings'
 
 import PortfolioAction from './PortfolioAction'
 import TransactionAction from './TransactionAction'
+// import EditPortfolioAction from './EditAction/EditPortfolioAction'
+// import EditTransactionAction from './EditAction/EditTransactionAction'
+import EditAction from './EditAction/'
 
 import { actionWidth } from '../config'
 
@@ -51,6 +54,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function ActionBar(props) {
   const {
+    page,
     portfolios,
     activePortfolio,
     setActivePortfolio,
@@ -139,11 +143,12 @@ export default function ActionBar(props) {
           <Typography className={classes.heading}>Edit</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <Typography>
-            Donec placerat, lectus sed mattis semper, neque lectus feugiat
-            lectus, varius pulvinar diam eros in elit. Pellentesque convallis
-            laoreet laoreet.
-          </Typography>
+          <EditAction
+            page={page}
+            QUERY={QUERY}
+            activePortfolio={activePortfolio}
+            portfolios={portfolios}
+          />
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel

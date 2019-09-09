@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
 const Portfolios = props => {
   const { portfolios, activePortfolio, setActivePortfolio } = props
   const classes = useStyles()
-  console.log(portfolios)
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={3}>

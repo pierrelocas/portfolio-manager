@@ -33,6 +33,7 @@ const GET_DATA = gql`
     }
     portfolios {
       _id
+      user_id
       name
       exchange
       currency
@@ -108,14 +109,10 @@ export default function Layout(props) {
   const classes = useStyles()
   const [open, setOpen] = useState(true)
   const [actionOn, setActionOn] = useState(true)
-  const [title, setTitle] = useState('Dashboard')
+  const [page, setPage] = useState('Dashboard')
   const [activePortfolio, setActivePortfolio] = useState('')
 
-  const {
-    loading,
-    error,
-    data: { me, portfolios, transactions }
-  } = useQuery(GET_DATA, {
+  const { loading, error, data } = useQuery(GET_DATA, {
     variables: { portfolioId: activePortfolio }
   })
 
@@ -126,6 +123,7 @@ export default function Layout(props) {
       </h3>
     )
 
+  const { me, portfolios, transactions } = data
   const handleDrawerOpen = () => {
     setOpen(true)
   }
@@ -144,7 +142,7 @@ export default function Layout(props) {
   }
 
   let content
-  switch (title) {
+  switch (page) {
     case 'Dashboard':
       content = <Dashboard />
       break
@@ -178,15 +176,15 @@ export default function Layout(props) {
       <CssBaseline />
       <Topbar
         handleDrawerOpen={handleDrawerOpen}
-        title={title}
+        page={page}
         handleSignOut={handleSignOut}
         open={open}
       />
       <MenuBar
         handleDrawerClose={handleDrawerClose}
         open={open}
-        setTitle={setTitle}
-        title={title}
+        setPage={setPage}
+        page={page}
       />
       <main className={clsx(classes.content, !actionOn && classes.contentWide)}>
         <div className={classes.appBarSpacer} />
@@ -201,6 +199,7 @@ export default function Layout(props) {
       >
         <div className={classes.appBarSpacer} />
         <ActionBar
+          page={page}
           portfolios={portfolios}
           activePortfolio={activePortfolio}
           setActivePortfolio={setActivePortfolio}

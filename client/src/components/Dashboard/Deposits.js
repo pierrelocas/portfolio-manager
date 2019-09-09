@@ -24,9 +24,10 @@ export default function Deposits() {
         on 15 March, 2019
       </Typography>
       <div>
-        <Link color="primary" href="javascript:;">
+        {/* <Link color="primary" href="javascript:;">
           View balance
-        </Link>
+        </Link> */}
+        <h4>view balance</h4>
       </div>
     </React.Fragment>
   )

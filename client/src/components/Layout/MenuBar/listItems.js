@@ -17,14 +17,13 @@ import AssignmentIcon from '@material-ui/icons/Assignment'
 
 // TODO : Create an array and maps listitems
 export function MainListItems(props) {
-  const { setTitle, title } = props
-  console.log(title)
+  const { setPage, page } = props
   return (
     <div>
       <ListItem
         button
-        onClick={() => setTitle('Dashboard')}
-        selected={title === 'Dashboard'}
+        onClick={() => setPage('Dashboard')}
+        selected={page === 'Dashboard'}
       >
         <ListItemIcon>
           <DashboardIcon />
@@ -34,8 +33,8 @@ export function MainListItems(props) {
 
       <ListItem
         button
-        onClick={() => setTitle('Portfolios')}
-        selected={title === 'Portfolios'}
+        onClick={() => setPage('Portfolios')}
+        selected={page === 'Portfolios'}
       >
         <ListItemIcon>
           <Briefcase />
@@ -45,8 +44,8 @@ export function MainListItems(props) {
 
       <ListItem
         button
-        onClick={() => setTitle('Positions')}
-        selected={title === 'Positions'}
+        onClick={() => setPage('Positions')}
+        selected={page === 'Positions'}
       >
         <ListItemIcon>
           <Wallet />
@@ -56,8 +55,8 @@ export function MainListItems(props) {
 
       <ListItem
         button
-        onClick={() => setTitle('Transactions')}
-        selected={title === 'Transactions'}
+        onClick={() => setPage('Transactions')}
+        selected={page === 'Transactions'}
       >
         <ListItemIcon>
           <ShoppingCartIcon />
@@ -67,8 +66,8 @@ export function MainListItems(props) {
 
       <ListItem
         button
-        onClick={() => setTitle('Statistics')}
-        selected={title === 'Statistics'}
+        onClick={() => setPage('Statistics')}
+        selected={page === 'Statistics'}
       >
         <ListItemIcon>
           <PieChart />
@@ -78,8 +77,8 @@ export function MainListItems(props) {
 
       <ListItem
         button
-        onClick={() => setTitle('Profile')}
-        selected={title === 'Profile'}
+        onClick={() => setPage('Profile')}
+        selected={page === 'Profile'}
       >
         <ListItemIcon>
           <AccountSetting />
@@ -96,8 +95,8 @@ export function MainListItems(props) {
 
       <ListItem
         button
-        onClick={() => setTitle('Market')}
-        selected={title === 'Market'}
+        onClick={() => setPage('Market')}
+        selected={page === 'Market'}
       >
         <ListItemIcon>
           <Finance />

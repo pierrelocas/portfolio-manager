@@ -62,9 +62,10 @@ export default function Portfolio(props) {
         {currency}
       </Typography>
       <div>
-        <Link color="primary" href="javascript:;">
+        {/* <Link color="primary" href="javascript:void(0)">
           View balance
-        </Link>
+        </Link> */}
+        <h4>view balance</h4>
       </div>
     </Paper>
   )

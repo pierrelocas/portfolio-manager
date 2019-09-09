@@ -88,7 +88,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function Topbar(props) {
-  const { handleDrawerOpen, title, handleSignOut, open } = props
+  const { handleDrawerOpen, page, handleSignOut, open } = props
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
 
@@ -124,7 +124,7 @@ export default function Topbar(props) {
           noWrap
           className={classes.title}
         >
-          {title}
+          {page}
         </Typography>
         <div className={classes.search}>
           <div className={classes.searchIcon}>

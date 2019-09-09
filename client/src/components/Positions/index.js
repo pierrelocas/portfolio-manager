@@ -102,7 +102,6 @@ const Positions = props => {
   }
 
   // TODO : Might want to include commission paid and number of transactions
-  console.log(positions)
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={3}>

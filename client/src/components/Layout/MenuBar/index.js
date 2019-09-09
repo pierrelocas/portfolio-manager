@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 // TODO :  Create array for list component and map through them
 
 export default function Sidebar(props) {
-  const { handleDrawerClose, open, title, setTitle } = props
+  const { handleDrawerClose, open, page, setPage } = props
   // console.log(title)
   const classes = useStyles()
   return (
@@ -63,7 +63,7 @@ export default function Sidebar(props) {
       </div>
       <Divider />
       <List>
-        <MainListItems title={title} setTitle={setTitle} />
+        <MainListItems title={page} setPage={setPage} />
       </List>
       <Divider />
       <List>
