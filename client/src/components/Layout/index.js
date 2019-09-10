@@ -38,6 +38,8 @@ const GET_DATA = gql`
       exchange
       currency
       favorite
+      createdAt
+      updatedAt
     }
     transactions(portfolioId: $portfolioId) {
       _id

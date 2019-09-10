@@ -147,6 +147,7 @@ export default function ActionBar(props) {
             page={page}
             QUERY={QUERY}
             activePortfolio={activePortfolio}
+            setActivePortfolio={setActivePortfolio}
             portfolios={portfolios}
           />
         </ExpansionPanelDetails>

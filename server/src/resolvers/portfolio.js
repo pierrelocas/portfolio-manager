@@ -52,7 +52,7 @@ module.exports = {
 
       // Update Portfolio
       try {
-        return !!(await Portfolio.findOneAndUpdate({ _id }, update))
+        return await Portfolio.findOneAndUpdate({ _id }, update, { new: true })
       } catch (err) {
         throw new ApolloError(err, 'MONGO_UPDATE_ERROR')
       }

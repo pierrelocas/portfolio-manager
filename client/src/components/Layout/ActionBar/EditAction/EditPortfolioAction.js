@@ -39,6 +39,22 @@ const CREATE_PORTFOLIO = gql`
       exchange
       currency
       favorite
+      createdAt
+      updatedAt
+    }
+  }
+`
+const UPDATE_PORTFOLIO = gql`
+  mutation updatePortfolio($id: ID!, $update: PortfolioInput!) {
+    updatePortfolio(id: $id, update: $update) {
+      _id
+      user_id
+      name
+      exchange
+      currency
+      favorite
+      createdAt
+      updatedAt
     }
   }
 `
@@ -50,7 +66,7 @@ const DELETE_PORTFOLIO = gql`
 `
 
 const EditPortfolioAction = props => {
-  const { page, QUERY, activePortfolio, portfolios } = props
+  const { page, QUERY, activePortfolio, setActivePortfolio, portfolios } = props
   const classes = useStyles()
   const intitialPortfolio = {
     name: '',
@@ -77,6 +93,36 @@ const EditPortfolioAction = props => {
         data: {
           me,
           portfolios: portfolios.concat([createPortfolio]),
+          transactions
+        }
+      })
+    }
+  })
+
+  const [updatePortfolio] = useMutation(UPDATE_PORTFOLIO, {
+    variables: {
+      id: activePortfolio,
+      update: portfolio
+    },
+    update(
+      cache,
+      {
+        data: { updatePortfolio }
+      }
+    ) {
+      const { me, portfolios, transactions } = cache.readQuery({
+        query: QUERY,
+        variables: { portfolioId: activePortfolio }
+      })
+      console.log(updatePortfolio)
+      cache.writeQuery({
+        query: QUERY,
+        variables: { portfolioId: activePortfolio },
+        data: {
+          me,
+          portfolios: portfolios.map(p =>
+            p._id === activePortfolio ? updatePortfolio : p
+          ),
           transactions
         }
       })
@@ -135,6 +181,7 @@ const EditPortfolioAction = props => {
         break
       case 'update':
         console.log('update')
+        updatePortfolio()
         break
       case 'clear':
         setPortfolio(intitialPortfolio)
@@ -142,6 +189,8 @@ const EditPortfolioAction = props => {
       case 'delete':
         deletePortfolio()
         setPortfolio(intitialPortfolio)
+        const favorite = portfolios.find(p => p.favorite === true)
+        setActivePortfolio(favorite._id)
         break
       default:
         console.log('unhandled action')

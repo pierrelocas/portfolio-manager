@@ -30,7 +30,7 @@ module.exports = gql`
 
   extend type Mutation {
     createPortfolio(portfolio: PortfolioInput!): Portfolio!
-    updatePortfolio(id: ID!, update: PortfolioInput): Boolean!
+    updatePortfolio(id: ID!, update: PortfolioInput): Portfolio!
     deletePortfolio(id: ID!): Boolean!
     deletePortfolios: Boolean
   }

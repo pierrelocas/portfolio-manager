@@ -4,7 +4,7 @@ import EditPortfolioAction from './EditPortfolioAction'
 import EditTransactionAction from './EditTransactionAction'
 
 const EditAction = props => {
-  const { page, QUERY, activePortfolio, portfolios } = props
+  const { page, QUERY, activePortfolio, setActivePortfolio, portfolios } = props
   console.log(page)
 
   let content
@@ -15,6 +15,7 @@ const EditAction = props => {
           page={page}
           QUERY={QUERY}
           activePortfolio={activePortfolio}
+          setActivePortfolio={setActivePortfolio}
           portfolios={portfolios}
         />
       )
