@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
-const Transaction = require('./transaction')
+// const Transaction = require('./transaction')
 
 const portfolioSchema = new Schema(
   {

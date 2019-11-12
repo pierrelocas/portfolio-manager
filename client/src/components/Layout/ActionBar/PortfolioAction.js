@@ -25,12 +25,9 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function PortfolioAction(props) {
-  const { portfolios, activePortfolio, setActivePortfolio } = props
+  const { portfolios, activePortfolio, handlePortfolioChange } = props
   const classes = useStyles()
 
-  function handleChange(event) {
-    setActivePortfolio(event.target.value)
-  }
 
   return (
     <form className={classes.root} autoComplete="off">
@@ -40,7 +37,7 @@ export default function PortfolioAction(props) {
         </InputLabel>
         <Select
           value={activePortfolio}
-          onChange={handleChange}
+          onChange={() => handlePortfolioChange(event.target.value)}
           input={<Input name="portfolio" id="portfolio-select" />}
           displayEmpty
           name="portfolio"

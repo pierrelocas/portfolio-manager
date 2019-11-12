@@ -2,6 +2,11 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const Portfolio = require('./portfolio')
+// NOTE: Transaction could not depend on portfolio if portfolio depends on Transaction.
+// I think I need to do the validation outside of the schema in order to wait that both model are created
+// Or do the validation in the resolver
+// Maybe have them in the same files.
+// Check what is really needed... cascade delete ?
 
 const transactionSchema = new Schema(
   {

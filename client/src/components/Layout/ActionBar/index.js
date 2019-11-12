@@ -56,8 +56,10 @@ export default function ActionBar(props) {
   const {
     page,
     portfolios,
+    transactions,
     activePortfolio,
-    setActivePortfolio,
+    handlePortfolioChange,
+    selectedTransactionId,
     QUERY,
     setActionOn,
     actionOn
@@ -110,7 +112,7 @@ export default function ActionBar(props) {
           <PortfolioAction
             portfolios={portfolios}
             activePortfolio={activePortfolio}
-            setActivePortfolio={setActivePortfolio}
+            handlePortfolioChange={handlePortfolioChange}
           />
         </ExpansionPanelDetails>
       </ExpansionPanel>
@@ -129,7 +131,12 @@ export default function ActionBar(props) {
           <Typography className={classes.heading}>Transaction</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <TransactionAction activePortfolio={activePortfolio} QUERY={QUERY} />
+          <TransactionAction
+            activePortfolio={activePortfolio}
+            QUERY={QUERY}
+            transactions={transactions}
+            selectedTransactionId={selectedTransactionId}
+          />
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel expanded={expanded.edit} onChange={handleChange('edit')}>
@@ -147,7 +154,8 @@ export default function ActionBar(props) {
             page={page}
             QUERY={QUERY}
             activePortfolio={activePortfolio}
-            setActivePortfolio={setActivePortfolio}
+            selectedTransactionId={selectedTransactionId}
+            handlePortfolioChange={handlePortfolioChange}
             portfolios={portfolios}
           />
         </ExpansionPanelDetails>

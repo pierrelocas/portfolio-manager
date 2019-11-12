@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
@@ -50,8 +50,12 @@ const FormatDateTime = props => {
 }
 
 const Transactions = props => {
-  const { transactions } = props
+  const { transactions, selectedTransactionId, handleTransactionChange } = props
   const classes = useStyles()
+
+  // function handleSelectTransaction(event, transactionId) {
+  //   handleTransactionChange(transactionId)
+  // }
 
   return (
     <Container maxWidth="lg" className={classes.container}>
@@ -74,7 +78,11 @@ const Transactions = props => {
               </TableHead>
               <TableBody>
                 {transactions.map(t => (
-                  <TableRow key={t._id}>
+                  <TableRow
+                    key={t._id}
+                    onClick={() => handleTransactionChange(t._id)}
+                    selected={t._id === selectedTransactionId}
+                  >
                     <TableCell>{t.quantity > 0 ? 'BUY' : 'SELL'}</TableCell>
                     <TableCell>{t.stock}</TableCell>
                     <TableCell>{t.stock} - desc</TableCell>

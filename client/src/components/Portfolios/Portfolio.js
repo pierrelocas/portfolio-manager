@@ -34,7 +34,7 @@ export default function Portfolio(props) {
     exchange,
     currency,
     activePortfolio,
-    setActivePortfolio
+    handlePortfolioChange
   } = props
   const classes = useStyles()
 
@@ -46,7 +46,7 @@ export default function Portfolio(props) {
         _id == activePortfolio && classes.active
       )}
       elevation={5}
-      onClick={() => setActivePortfolio(_id)}
+      onClick={() => handlePortfolioChange(_id)}
     >
       <Title>{name}</Title>
       <Typography component="p" variant="h4">

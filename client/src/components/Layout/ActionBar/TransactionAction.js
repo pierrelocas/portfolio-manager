@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { useMutation } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
@@ -43,14 +43,55 @@ const CREATE_TRANSACTION = gql`
 `
 
 function TransactionAction(props) {
-  const { activePortfolio, QUERY } = props
+  const { activePortfolio, transactions, selectedTransactionId, QUERY } = props
   const classes = useStyles()
-  const [stock, setStock] = useState('')
-  const [description, setDescription] = useState('')
-  const [quantity, setQuantity] = useState('')
-  const [price, setPrice] = useState('')
-  const [commission, setCommission] = useState('')
-  const [selectedDate, setSelectedDate] = useState(new Date())
+
+  const initialTransaction = {
+    date: new Date(),
+    stock: '',
+    description: '',
+    quantity: '',
+    price: '',
+    commission: ''
+  }
+
+  const [currentTransaction, setCurrentTransaction] = useState(
+    initialTransaction
+  )
+
+  const formatDateTime = date => {
+    const locale = 'en-US'
+    const options = {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }
+    return new Date(parseInt(date)).toLocaleString(locale, options)
+  }
+
+  useEffect(() => {
+    if (selectedTransactionId) {
+      console.log(selectedTransactionId, transactions)
+      // if (transactions) {
+      // const { date, stock, quantity, price, commission } = transactions.find(
+      //   t => t._id === selectedTransactionId
+      // )
+      // setCurrentTransaction(previous => ({
+      //   ...previous,
+      //   date: new Date(formatDateTime(date)),
+      //   stock,
+      //   description: `${stock} - Desc`,
+      //   quantity: Math.abs(quantity),
+      //   price,
+      //   commission
+      // }))
+      // }
+    }
+  }, [selectedTransactionId, transactions])
+
   const [createTransaction] = useMutation(CREATE_TRANSACTION, {
     update(
       cache,
@@ -75,13 +116,27 @@ function TransactionAction(props) {
   })
 
   function handleDateChange(date) {
-    setSelectedDate(date)
+    console.log('date from handleDateChange', date)
+    setCurrentTransaction(previous => ({ ...previous, date }))
+  }
+
+  function handleChange(event) {
+    const { name, value } = event.target
+    setCurrentTransaction(previous => ({ ...previous, [name]: value }))
   }
 
   const submitTransaction = event => {
+    const {
+      date,
+      stock,
+      description,
+      quantity,
+      price,
+      commission
+    } = currentTransaction
     const transaction = {
       portfolio_id: activePortfolio,
-      date: format(selectedDate, 'MM/dd/yyyy H:mm:ss'),
+      date: format(date, 'MM/dd/yyyy H:mm:ss'),
       stock,
       quantity:
         event.currentTarget.value === 'sell'
@@ -90,6 +145,7 @@ function TransactionAction(props) {
       price: parseFloat(price),
       commission: parseFloat(commission)
     }
+    console.log(transaction)
     createTransaction({
       variables: {
         transaction
@@ -103,7 +159,7 @@ function TransactionAction(props) {
         <Grid item xs={12}>
           <DateTimePicker
             label="Date &amp; Time"
-            value={selectedDate}
+            value={currentTransaction.date}
             onChange={handleDateChange}
             showTodayButton
             fullWidth
@@ -117,8 +173,8 @@ function TransactionAction(props) {
             id="stock"
             label="Stock"
             autoFocus
-            value={stock}
-            onChange={event => setStock(event.target.value)}
+            value={currentTransaction.stock}
+            onChange={event => handleChange(event)}
           />
         </Grid>
         <Grid item xs={8}>
@@ -128,35 +184,38 @@ function TransactionAction(props) {
             id="description"
             label="Description"
             autoFocus
-            value={description}
-            onChange={event => setDescription(event.target.value)}
+            value={currentTransaction.description}
+            onChange={event => handleChange(event)}
           />
         </Grid>
 
         <Grid item xs={4}>
           <TextField
             id="quantity"
+            name="quantity"
             label="Quantity"
-            value={quantity}
-            onChange={event => setQuantity(event.target.value)}
+            value={currentTransaction.quantity}
+            onChange={event => handleChange(event)}
             type="number"
           />
         </Grid>
         <Grid item xs={4}>
           <TextField
             id="price"
+            name="price"
             label="Price"
-            value={price}
-            onChange={event => setPrice(event.target.value)}
+            value={currentTransaction.price}
+            onChange={event => handleChange(event)}
             type="number"
           />
         </Grid>
         <Grid item xs={4}>
           <TextField
             id="commission"
+            name="commission"
             label="Commission"
-            value={commission}
-            onChange={event => setCommission(event.target.value)}
+            value={currentTransaction.commission}
+            onChange={event => handleChange(event)}
             type="number"
           />
         </Grid>

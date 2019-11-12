@@ -66,7 +66,13 @@ const DELETE_PORTFOLIO = gql`
 `
 
 const EditPortfolioAction = props => {
-  const { page, QUERY, activePortfolio, setActivePortfolio, portfolios } = props
+  const {
+    page,
+    QUERY,
+    activePortfolio,
+    handlePortfolioChange,
+    portfolios
+  } = props
   const classes = useStyles()
   const intitialPortfolio = {
     name: '',
@@ -190,7 +196,7 @@ const EditPortfolioAction = props => {
         deletePortfolio()
         setPortfolio(intitialPortfolio)
         const favorite = portfolios.find(p => p.favorite === true)
-        setActivePortfolio(favorite._id)
+        handlePortfolioChange(favorite._id)
         break
       default:
         console.log('unhandled action')

@@ -113,6 +113,7 @@ export default function Layout(props) {
   const [actionOn, setActionOn] = useState(true)
   const [page, setPage] = useState('Dashboard')
   const [activePortfolio, setActivePortfolio] = useState('')
+  const [selectedTransactionId, setSelectedTransactionId] = useState('')
 
   const { loading, error, data } = useQuery(GET_DATA, {
     variables: { portfolioId: activePortfolio }
@@ -138,9 +139,18 @@ export default function Layout(props) {
     authenticate()
   }
 
+  function handlePortfolioChange(portfolioId) {
+    setActivePortfolio(portfolioId)
+    handleTransactionChange('')
+  }
+
+  function handleTransactionChange(transactionId) {
+    setSelectedTransactionId(transactionId)
+  }
+
   if (!activePortfolio && portfolios) {
     const { _id } = portfolios.find(p => p.favorite)
-    setActivePortfolio(_id)
+    handlePortfolioChange(_id)
   }
 
   let content
@@ -153,12 +163,18 @@ export default function Layout(props) {
         <Portfolios
           portfolios={portfolios}
           activePortfolio={activePortfolio}
-          setActivePortfolio={setActivePortfolio}
+          handlePortfolioChange={handlePortfolioChange}
         />
       )
       break
     case 'Transactions':
-      content = <Transactions transactions={transactions} />
+      content = (
+        <Transactions
+          transactions={transactions}
+          selectedTransactionId={selectedTransactionId}
+          handleTransactionChange={handleTransactionChange}
+        />
+      )
       break
     case 'Positions':
       content = <Positions transactions={transactions} />
@@ -203,8 +219,10 @@ export default function Layout(props) {
         <ActionBar
           page={page}
           portfolios={portfolios}
+          transactions={transactions}
           activePortfolio={activePortfolio}
-          setActivePortfolio={setActivePortfolio}
+          handlePortfolioChange={handlePortfolioChange}
+          selectedTransactionId={selectedTransactionId}
           QUERY={GET_DATA}
           setActionOn={setActionOn}
           actionOn={actionOn}

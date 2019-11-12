@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Portfolios = props => {
-  const { portfolios, activePortfolio, setActivePortfolio } = props
+  const { portfolios, activePortfolio, handlePortfolioChange } = props
   const classes = useStyles()
   return (
     <Container maxWidth="lg" className={classes.container}>
@@ -25,7 +25,7 @@ const Portfolios = props => {
             <Portfolio
               {...portfolio}
               activePortfolio={activePortfolio}
-              setActivePortfolio={setActivePortfolio}
+              handlePortfolioChange={handlePortfolioChange}
             />
           </Grid>
         ))}

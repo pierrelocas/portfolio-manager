@@ -4,8 +4,16 @@ import EditPortfolioAction from './EditPortfolioAction'
 import EditTransactionAction from './EditTransactionAction'
 
 const EditAction = props => {
-  const { page, QUERY, activePortfolio, setActivePortfolio, portfolios } = props
-  console.log(page)
+  const {
+    page,
+    QUERY,
+    portfolios,
+    transactions,
+    activePortfolio,
+    handlePortfolioChange,
+    selectedTransactionId
+  } = props
+  // console.log(page)
 
   let content
   switch (page) {
@@ -15,13 +23,20 @@ const EditAction = props => {
           page={page}
           QUERY={QUERY}
           activePortfolio={activePortfolio}
-          setActivePortfolio={setActivePortfolio}
+          handlePortfolioChange={handlePortfolioChange}
           portfolios={portfolios}
         />
       )
       break
     case 'Transactions':
-      content = <EditTransactionAction page={page} QUERY={QUERY} />
+      content = (
+        <EditTransactionAction
+          page={page}
+          QUERY={QUERY}
+          transactions={transactions}
+          selectedTransactionId={selectedTransactionId}
+        />
+      )
       break
     default:
       content = <h3>No edit available for current context</h3>
